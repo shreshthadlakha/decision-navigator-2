@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Navigator — Make better choices with weighted clarity</title>
+  <meta name="description" content="A free step-by-step decision tool. Compare options with weighted criteria and get a ranked recommendation with confidence level. No signup. No cost. Autosaves locally.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='none' stroke='%232563EB' stroke-width='12'/><circle cx='50' cy='50' r='22' fill='none' stroke='%232563EB' stroke-width='12'/><circle cx='50' cy='50' r='8' fill='%232563EB'/></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <svg class="logo-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="12" cy="12" r="6"/>
+          <circle cx="12" cy="12" r="2"/>
+        </svg>
+        <span class="logo-text">Decision Navigator</span>
+      </div>
+      <div class="header-actions">
+        <button class="link-reset" id="btn-start-over" title="Clear everything and start a new decision">Start over</button>
+        <a href="https://digitalheroesco.com" target="_blank" rel="noopener" class="btn btn-dh">
+          Built for Digital Heroes
+        </a>
+      </div>
+    </div>
+
+    <!-- PROGRESS RAIL -->
+    <nav class="rail-wrap" aria-label="Decision steps">
+      <ol class="rail-full" id="rail-full"></ol>
+      <div class="rail-compact" id="rail-compact">
+        <div class="rail-compact-top">
+          <span id="rail-compact-text"></span>
+        </div>
+        <div class="rail-compact-track"><div class="rail-compact-fill" id="rail-compact-fill"></div></div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN — ONE STEP VISIBLE AT A TIME -->
+  <main class="main">
+
+    <!-- STEP 1 — DECISION -->
+    <section class="step-panel" data-step="1" id="step-1">
+      <div class="step-card">
+        <h1 class="step-h">What are you deciding?</h1>
+        <p class="step-sub">Describe the decision in a few words. You'll compare specific options next.</p>
+
+        <input
+          id="decision-title"
+          class="field-lg"
+          type="text"
+          placeholder="e.g. Which college should I join?"
+          maxlength="200"
+          autocomplete="off"
+        >
+
+        <div class="chip-row" id="chip-row">
+          <button class="chip" data-fill="Which job offer should I accept?">Which job offer?</button>
+          <button class="chip" data-fill="Which laptop should I buy?">Which laptop?</button>
+          <button class="chip" data-fill="Which apartment should I rent?">Which apartment?</button>
+          <button class="chip" data-fill="Which college should I join?">Which college?</button>
+        </div>
+
+        <textarea
+          id="decision-context"
+          class="field-textarea"
+          placeholder="Add background or context (optional)"
+          rows="2"
+        ></textarea>
+
+        <p class="step-error" id="err-1"></p>
+      </div>
+
+      <p class="example-link">
+        New here? <button class="link-inline" id="btn-load-example">See it filled in with an example →</button>
+      </p>
+    </section>
+
+    <!-- STEP 2 — OPTIONS -->
+    <section class="step-panel" data-step="2" id="step-2">
+      <div class="step-card">
+        <h1 class="step-h">What are your options?</h1>
+        <p class="step-sub">Add the things you're choosing between. At least 2 to continue.</p>
+
+        <div id="options-list"></div>
+        <button class="btn btn-add" id="btn-add-option">+ Add option</button>
+
+        <p class="step-error" id="err-2"></p>
+      </div>
+    </section>
+
+    <!-- STEP 3 — CRITERIA -->
+    <section class="step-panel" data-step="3" id="step-3">
+      <div class="step-card">
+        <h1 class="step-h">What matters to you?</h1>
+        <p class="step-sub">Add the factors you care about and set how important each one is. At least 2 to continue.</p>
+
+        <div id="criteria-list"></div>
+        <button class="btn btn-add" id="btn-add-criterion">+ Add criterion</button>
+
+        <p class="step-error" id="err-3"></p>
+      </div>
+    </section>
+
+    <!-- STEP 4 — SCORE -->
+    <section class="step-panel" data-step="4" id="step-4">
+      <div class="step-card step-card-wide">
+        <h1 class="step-h">Rate each option</h1>
+        <p class="step-sub">Drag each slider to show how well that option performs. 1 = poor, 10 = excellent.</p>
+
+        <div class="score-progress">
+          <span class="score-progress-text" id="score-progress-text"></span>
+          <div class="score-progress-track">
+            <div class="score-progress-fill" id="score-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="opt-pills" id="opt-pills"></div>
+        <div id="score-rows"></div>
+      </div>
+    </section>
+
+    <!-- STEP 5 — RESULTS -->
+    <section class="step-panel" data-step="5" id="step-5">
+      <div class="step-card step-card-wide">
+        <div class="edit-row" id="edit-row">
+          <span class="edit-label">Edit:</span>
+          <button class="edit-pill" data-go="2">Options</button>
+          <button class="edit-pill" data-go="3">Criteria</button>
+          <button class="edit-pill" data-go="4">Scores</button>
+        </div>
+        <div id="results-content"></div>
+        <button class="link-inline link-new-decision" id="btn-new-decision">+ Start a new decision</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV — sticky, steps 1-4 only -->
+  <div class="bottom-nav" id="bottom-nav">
+    <button class="btn btn-secondary" id="btn-back">← Back</button>
+    <button class="btn btn-primary" id="btn-next">Continue →</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-name">Shreshth Adlakha</span>
+      <span class="footer-sep">·</span>
+      <a class="footer-email" href="mailto:shreshthadlakha@gmail.com">shreshthadlakha@gmail.com</a>
+      <span class="footer-sep">·</span>
+      <span class="footer-note">Autosaves locally. Share links include your decision data.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
