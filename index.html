@@ -10,7 +10,7 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- HEADER — full width, DH button pinned to far top-right corner -->
   <header class="header">
     <div class="header-inner">
       <div class="logo">
@@ -75,6 +75,10 @@
         ></textarea>
 
         <p class="step-error" id="err-1"></p>
+
+        <div class="step-nav step-nav-end">
+          <button class="btn btn-primary" data-nav="next">Continue →</button>
+        </div>
       </div>
 
       <p class="example-link">
@@ -92,6 +96,11 @@
         <button class="btn btn-add" id="btn-add-option">+ Add option</button>
 
         <p class="step-error" id="err-2"></p>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" data-nav="back">← Back</button>
+          <button class="btn btn-primary" data-nav="next">Continue →</button>
+        </div>
       </div>
     </section>
 
@@ -105,6 +114,11 @@
         <button class="btn btn-add" id="btn-add-criterion">+ Add criterion</button>
 
         <p class="step-error" id="err-3"></p>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" data-nav="back">← Back</button>
+          <button class="btn btn-primary" data-nav="next">Continue →</button>
+        </div>
       </div>
     </section>
 
@@ -123,6 +137,11 @@
 
         <div class="opt-pills" id="opt-pills"></div>
         <div id="score-rows"></div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" data-nav="back">← Back</button>
+          <button class="btn btn-primary" id="btn-next-4" data-nav="next">See my results →</button>
+        </div>
       </div>
     </section>
 
@@ -142,19 +161,13 @@
 
   </main>
 
-  <!-- BOTTOM NAV — sticky, steps 1-4 only -->
-  <div class="bottom-nav" id="bottom-nav">
-    <button class="btn btn-secondary" id="btn-back">← Back</button>
-    <button class="btn btn-primary" id="btn-next">Continue →</button>
-  </div>
-
-  <!-- FOOTER -->
+  <!-- FOOTER — fixed, always visible, never scrolls away -->
   <footer class="footer">
     <div class="footer-inner">
       <span class="footer-name">Shreshth Adlakha</span>
       <span class="footer-sep">·</span>
       <a class="footer-email" href="mailto:shreshthadlakha@gmail.com">shreshthadlakha@gmail.com</a>
-      <span class="footer-sep">·</span>
+      <span class="footer-sep footer-sep-note">·</span>
       <span class="footer-note">Autosaves locally. Share links include your decision data.</span>
     </div>
   </footer>
