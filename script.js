@@ -170,7 +170,6 @@ function goTo(n) {
 }
 
 function goNext() {
-  if (currentStep === 4) return; // gated entirely by disabled button
   if (!stepValid(currentStep)) { showStepError(currentStep); return; }
   currentStep = Math.min(currentStep + 1, 5);
   if (currentStep === 4) ensureActiveOpt();
@@ -441,10 +440,9 @@ function updateScoreRowUI(optId, critId, val) {
 
 function updateNextButtonForStep4() {
   if (currentStep !== 4) return;
-  const btn = $("btn-next");
-  const complete = stepValid(4);
-  btn.disabled = !complete;
-  btn.textContent = complete ? "See my results →" : "See my results →";
+  const btn = $("btn-next-4");
+  if (!btn) return;
+  btn.disabled = !stepValid(4);
 }
 
 // ============================================================
@@ -558,18 +556,6 @@ function render() {
   if (currentStep === 3) renderStep3();
   if (currentStep === 4) renderStep4();
   if (currentStep === 5) renderStep5();
-
-  // Bottom nav visibility / labels
-  const nav = $("bottom-nav");
-  if (currentStep === 5) {
-    nav.classList.add("is-hidden");
-  } else {
-    nav.classList.remove("is-hidden");
-    $("btn-back").style.visibility = currentStep === 1 ? "hidden" : "visible";
-    const labels = { 1: "Continue →", 2: "Continue →", 3: "Continue →", 4: "See my results →" };
-    $("btn-next").textContent = labels[currentStep];
-    $("btn-next").disabled = currentStep === 4 ? !stepValid(4) : false;
-  }
 }
 
 // ============================================================
@@ -624,17 +610,13 @@ function bindEvents() {
     if (inputs.length) inputs[inputs.length - 1].focus();
   });
 
-  // Bottom nav
-  $("btn-back").addEventListener("click", goBack);
-  $("btn-next").addEventListener("click", goNext);
-
   // Header / results reset & new decision
   $("btn-start-over").addEventListener("click", resetAll);
   $("btn-new-decision").addEventListener("click", resetAll);
 
   // ── Click delegation ─────────────────────────────────────
   document.addEventListener("click", e => {
-    const el = e.target.closest("[data-action], [data-go]");
+    const el = e.target.closest("[data-action], [data-go], [data-nav]");
     if (!el) {
       if (e.target.id === "btn-copy") {
         const ranked = calcScores(); const conf = calcConf(ranked);
@@ -647,9 +629,11 @@ function bindEvents() {
       return;
     }
 
-    const action = el.dataset.action, id = el.dataset.id, go = el.dataset.go;
+    const action = el.dataset.action, id = el.dataset.id, go = el.dataset.go, navDir = el.dataset.nav;
 
     if (go) { goTo(Number(go)); return; }
+    if (navDir === "next") { goNext(); return; }
+    if (navDir === "back") { goBack(); return; }
 
     if (action === "rm-opt") {
       state.options = state.options.filter(o => o.id !== id);
